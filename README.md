@@ -1,5 +1,39 @@
 # Gestão de Alunos API
 
+[![Testes de API](https://github.com/jessicaraissapessoa/gestao-de-alunos-api/actions/workflows/tests.yml/badge.svg)](https://github.com/jessicaraissapessoa/gestao-de-alunos-api/actions/workflows/tests.yml)
+
+## Trabalho de automação de testes de serviço
+
+Fork de [juliodelimas/gestao-de-alunos-api](https://github.com/juliodelimas/gestao-de-alunos-api).
+Os testes usam **Mocha, SuperTest e Chai**, com **Dotenv**, helpers de login e execução no **GitHub Actions**.
+
+### Executar os testes
+
+Requer Node.js 24 e acesso à internet na primeira execução para baixar o MongoDB temporário.
+
+```bash
+npm ci
+npm test
+```
+
+Não é necessário iniciar a API ou instalar MongoDB para testar localmente: o SuperTest usa o app Express e o `mongodb-memory-server` inicia um MongoDB real temporário.
+Cada execução cria um banco exclusivo, carrega os dados iniciais e remove esse banco ao terminar.
+No GitHub Actions, os mesmos testes usam o serviço `mongo:7` via `TEST_MONGODB_URI`.
+
+Para executar a aplicação, copie `.env.example` para `.env`, configure `MONGODB_URI` e `JWT_SECRET` e siga as instruções de instalação abaixo. O arquivo `.env` é ignorado pelo Git.
+
+### Cenários e organização
+
+- `test/data/cenarios.json`: credenciais de demonstração e dois conjuntos de aluno/trabalho. Adicionar outro item em `cenarios` gera automaticamente outro teste completo (Data-Driven Testing).
+- `test/helpers/login.js`: helpers `loginAdmin` e `loginAluno`, que validam token e perfil.
+- `test/auth.test.js`: login de administrador válido e rejeição de senha inválida.
+- `test/entrega-trabalho.test.js`: login admin → cadastro de aluno → login aluno → matrícula na disciplina → entrega do trabalho como aluno → consulta para confirmar persistência.
+- O fluxo também valida entrega sem matrícula (409), ausência de token (401), operação administrativa por aluno (403) e acesso aos trabalhos de outro aluno (403).
+- `test/setup.js`: configuração Dotenv, preparação e encerramento do banco de testes.
+- `.github/workflows/tests.yml`: instalação por `npm ci` e execução por `npm test` em pushes e pull requests para `main`.
+
+As credenciais no JSON pertencem somente aos usuários fictícios do seed. Para a entrega do trabalho, use o link deste fork e confira a execução verde na aba Actions.
+
 API REST para gestão de alunos, disciplinas, notas e trabalhos, com persistência em MongoDB.
 
 ## Descrição

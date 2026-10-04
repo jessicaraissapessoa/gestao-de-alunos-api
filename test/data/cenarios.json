@@ -1,0 +1,16 @@
+{
+  "admin": { "email": "admin@escola.com", "senha": "admin123" },
+  "loginInvalido": { "email": "admin@escola.com", "senha": "senha-incorreta" },
+  "cenarios": [
+    {
+      "nome": "exercícios de matemática",
+      "aluno": { "nome": "Aluno Matemática", "email": "teste.matematica@example.com", "matricula": "TESTE001", "senha": "teste123" },
+      "trabalho": { "disciplinaId": "disciplina-matematica", "titulo": "Lista de exercícios", "descricao": "Resolução das questões de matemática." }
+    },
+    {
+      "nome": "projeto de programação",
+      "aluno": { "nome": "Aluno Programação", "email": "teste.programacao@example.com", "matricula": "TESTE002", "senha": "teste456" },
+      "trabalho": { "disciplinaId": "disciplina-programacao-web", "titulo": "Projeto de API", "descricao": "Implementação e testes de uma API REST." }
+    }
+  ]
+}

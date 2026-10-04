@@ -1,28 +1,15 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import mongoose from 'mongoose';
+import { readFileSync } from 'node:fs';
 import app from '../src/app.js';
-
-describe('POST /api/auth/login', () => {
-  after(async () => {
-    await mongoose.connection.close();
+import { loginAdmin } from './helpers/login.js';
+const dados = JSON.parse(readFileSync(new URL('./data/cenarios.json', import.meta.url), 'utf8'));
+describe('Login do administrador', () => {
+  it('retorna token e perfil admin com credenciais válidas', async () => {
+    await loginAdmin(dados.admin);
   });
-
-  it('deve retornar 200 e um token quando o admin informar e-mail e senha corretos', async () => {
-    const resposta = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'admin@escola.com', senha: 'admin123' });
-
-    expect(resposta.status).to.equal(200);
-    expect(resposta.body).to.have.property('token');
-  });
-
-  it('deve retornar 401 quando a senha informada for inválida', async () => {
-    const resposta = await request(app)
-      .post('/api/auth/login')
-      .send({ email: 'admin@escola.com', senha: 'senha-incorreta' });
-
-    expect(resposta.status).to.equal(401);
+  it('rejeita senha inválida', async () => {
+    const resposta = await request(app).post('/api/auth/login').send(dados.loginInvalido).expect(401);
     expect(resposta.body.error).to.equal('E-mail ou senha inválidos.');
   });
 });
